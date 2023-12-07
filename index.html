@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+<svg id="mySvg" width="1000" height="1000">
+    <rect id="rect1" x="100" y="310" width="100" height="100" style="fill:blue" class="cell-occupied" data-name="信息技术交流会"/>
+    <rect id="rect2" x="250" y="310" width="100" height="100" style="fill:red" class="cell-occupied" data-name="支部学习交流会"/>
+    <rect id="rect3" x="400" y="310" width="100" height="100" style="fill:green" class="cell-occupied" data-name="xxx项目月例会"/>
+    <rect id="newRect" x="0" y="0" width="100" height="50" style="fill:yellow; visibility:hidden"/>
+    <text id="newRectText" x="0" y="0" visibility="hidden"></text>
+</svg>
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 50 50 A 20 20 0 0 1 70 30 L 130 30 A 20 20 0 0 1 150 50 L 150 130 A 20 20 0 0 1 130 150 L 70 150 A 20 20 0 0 1 50 130 Z" fill="none" stroke="black"/>
+</svg>
+<script>
+    document.querySelectorAll('.cell-occupied').forEach(rect => {
+        rect.addEventListener('click', (event) => {
+            // Stop the event from bubbling up to the SVG
+            event.stopPropagation();
+
+            // Get the new rectangle's text
+            let newRectText = document.getElementById('newRectText');
+
+            // Set the text of the new rectangle's text
+            newRectText.textContent = rect.dataset.name; // Get the name from the "data-name" attribute
+
+            // Compute the width of the new rectangle based on the length of the text
+            let newRectWidth = newRectText.getComputedTextLength() + 20; // Add some padding
+
+            // Get the center of the clicked rectangle
+            let rectCenter = parseFloat(rect.getAttribute('x')) + parseFloat(rect.getAttribute('width')) / 2;
+
+            // Calculate the new x position for the new rectangle
+            let newRectX = rectCenter - newRectWidth / 2;
+            let newRectY = rect.getAttribute('y') - 60; // Position it above the clicked rectangle
+
+            // Get the new rectangle
+            let newRect = document.getElementById('newRect');
+
+            // Set the width of the new rectangle
+            newRect.setAttribute('width', newRectWidth);
+
+            // Translate the new rectangle and its text
+            newRect.setAttribute('transform', `translate(${newRectX} ${newRectY})`);
+            newRectText.setAttribute('transform', `translate(${newRectX + 10} ${newRectY + 20})`); // Add some padding
+
+            // Make the new rectangle and its text visible
+            newRect.style.visibility = 'visible';
+            newRectText.style.visibility = 'visible';
+        });
+    });
+
+    // Add an event listener to the SVG
+    document.getElementById('mySvg').addEventListener('click', () => {
+        // Hide the new rectangle and its text
+        document.getElementById('newRect').style.visibility = 'hidden';
+        document.getElementById('newRectText').style.visibility = 'hidden';
+    });
+</script>
+</div>
+</body>
+</html>
